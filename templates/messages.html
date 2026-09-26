@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Messages</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.navbar{background:rgba(15,23,42,.9);backdrop-filter:blur(15px);padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05)}
+.logo{font-size:22px;font-weight:700}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+.navbar a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:14px}
+.navbar a:hover{color:#fff}
+.container{max-width:900px;margin:30px auto;padding:0 20px}
+h1{color:#fff;font-size:28px;margin-bottom:5px}
+.subtitle{color:#94a3b8;font-size:14px;margin-bottom:25px}
+.message-form{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;margin-bottom:25px}
+.message-form textarea{width:100%;padding:14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-size:15px;font-family:inherit;resize:vertical;min-height:80px;outline:none;transition:.3s}
+.message-form textarea:focus{border-color:#60a5fa;box-shadow:0 0 0 4px rgba(96,165,250,.15)}
+.message-form button{margin-top:12px;padding:12px 28px;background:linear-gradient(135deg,#60a5fa,#3b82f6);border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:8px}
+.message-form button:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(59,130,246,.5)}
+.message{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;margin-bottom:12px}
+.message-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.message-author{color:#60a5fa;font-weight:600;font-size:14px}
+.message-date{color:#64748b;font-size:12px}
+.message-content{color:#cbd5e1;font-size:14px;line-height:1.6}
+.empty{text-align:center;padding:40px;color:#64748b;background:rgba(255,255,255,.02);border-radius:16px;border:1px dashed rgba(255,255,255,.1)}
+.empty i{font-size:40px;color:#334155;display:block;margin-bottom:15px}
+.alert{padding:12px 20px;border-radius:10px;margin-bottom:20px}
+.alert-success{background:rgba(52,211,153,.15);color:#6ee7b7;border:1px solid rgba(52,211,153,.2)}
+.alert-danger{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="logo"><span class="vega">VEGA</span><span class="d">D</span></div>
+<div>
+<a href="/feed">Fil d'actualité</a>
+{% if session.role in ['admin', 'representative'] %}
+<a href="/admin">Admin</a>
+{% endif %}
+<a href="/alerts">Alertes</a>
+<a href="/fund">Caisse</a>
+<a href="/logout">Déconnexion</a>
+</div>
+</nav>
+<div class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<h1>💬 Messages</h1>
+<p class="subtitle">Échangez avec votre communauté</p>
+<div class="message-form">
+<form method="POST">
+<textarea name="content" placeholder="Écrivez votre message..." required></textarea>
+<button type="submit"><i class="fas fa-paper-plane"></i> Envoyer</button>
+</form>
+</div>
+{% if messages %}
+{% for msg in messages %}
+<div class="message">
+<div class="message-header">
+<span class="message-author">
+<i class="fas fa-user-circle"></i>
+{{ msg.sender.username if msg.sender else 'Anonyme' }}
+</span>
+<span class="message-date">{{ msg.created_at.strftime('%d/%m/%Y à %H:%M') }}</span>
+</div>
+<div class="message-content">{{ msg.content }}</div>
+</div>
+{% endfor %}
+{% else %}
+<div class="empty">
+<i class="fas fa-comments"></i>
+<h3 style="color:#fff;margin-bottom:8px;">Aucun message</h3>
+<p>Soyez le premier à écrire !</p>
+</div>
+{% endif %}
+</div>
+</body>
+</html>

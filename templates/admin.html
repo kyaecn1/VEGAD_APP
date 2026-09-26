@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Admin</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.navbar{background:rgba(15,23,42,.9);backdrop-filter:blur(15px);padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05)}
+.logo{font-size:22px;font-weight:700}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+.navbar a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:14px}
+.navbar a:hover{color:#fff}
+.container{max-width:1200px;margin:30px auto;padding:0 20px}
+h1{margin-bottom:5px;font-size:28px}
+h1.rep{color:#a78bfa}
+h1.admin{color:#f59e0b}
+h1.creator{color:#facc15}
+.role-badge-header{padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-left:10px;vertical-align:middle}
+.role-badge-header.rep{background:rgba(167,139,250,.2);color:#a78bfa}
+.role-badge-header.admin{background:rgba(245,158,11,.2);color:#f59e0b}
+.role-badge-header.creator{background:rgba(250,204,21,.2);color:#facc15}
+.subtitle{color:#94a3b8;margin-bottom:30px;font-size:14px}
+.trial-banner{background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(96,165,250,.15));border:1px solid rgba(52,211,153,.3);border-radius:16px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;flex-wrap:wrap;gap:15px}
+.trial-info{display:flex;align-items:center;gap:15px}
+.trial-icon{width:50px;height:50px;border-radius:14px;background:rgba(52,211,153,.2);display:flex;align-items:center;justify-content:center;font-size:24px;color:#34d399}
+.trial-text h3{color:#fff;font-size:16px;margin-bottom:3px}
+.trial-text p{color:#94a3b8;font-size:13px}
+.trial-text .highlight{color:#34d399;font-weight:700}
+.btn-subscribe{padding:12px 24px;background:linear-gradient(135deg,#34d399,#10b981);border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:600;text-decoration:none;transition:.3s;display:inline-flex;align-items:center;gap:8px}
+.btn-subscribe:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(16,185,129,.5)}
+.subscribed-banner{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:16px;padding:15px 25px;margin-bottom:25px;display:flex;align-items:center;gap:15px}
+.subscribed-banner i{color:#34d399;font-size:20px}
+.subscribed-banner span{color:#6ee7b7;font-size:14px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:30px}
+.stat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px}
+.stat-value{font-size:32px;font-weight:800;color:#60a5fa}
+.stat-label{color:#64748b;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-top:5px}
+.section-title{color:#fff;font-size:18px;font-weight:600;margin:30px 0 15px;display:flex;align-items:center;gap:10px}
+.badge-count{background:rgba(255,255,255,.1);color:#94a3b8;padding:3px 10px;border-radius:20px;font-size:12px}
+.alert-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;margin-bottom:12px;display:flex;gap:15px;align-items:start}
+.alert-card.pending{border-left:4px solid #f59e0b}
+.alert-card.urgent{border-left:4px solid #ef4444;background:rgba(239,68,68,.05)}
+.alert-icon{width:45px;height:45px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.alert-icon.urgent{background:rgba(239,68,68,.15);color:#ef4444}
+.alert-icon.minor{background:rgba(245,158,11,.15);color:#f59e0b}
+.alert-body{flex:1}
+.alert-body h3{color:#fff;font-size:16px;margin-bottom:5px}
+.alert-body p{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.alert-meta{display:flex;gap:15px;font-size:12px;color:#64748b;flex-wrap:wrap}
+.alert-actions{display:flex;gap:8px;margin-top:12px}
+.btn-small{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:5px}
+.btn-approve{background:rgba(52,211,153,.2);color:#34d399}
+.btn-reject{background:rgba(239,68,68,.2);color:#fca5a5}
+.btn-view{background:rgba(96,165,250,.2);color:#60a5fa}
+.quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:30px}
+.action-btn{padding:15px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:#fff;text-decoration:none;font-size:14px;font-weight:500;text-align:center;transition:.3s}
+.action-btn:hover{border-color:#60a5fa;background:rgba(96,165,250,.1)}
+.members-list{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px}
+.member{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.member:last-child{border:none}
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#34d399);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px}
+.member-info{flex:1}
+.member-info .name{color:#fff;font-weight:600;font-size:15px}
+.member-info .email{color:#64748b;font-size:12px}
+.role-badge{padding:3px 12px;border-radius:20px;font-size:11px;font-weight:600}
+.role-badge.member{background:rgba(96,165,250,.2);color:#60a5fa}
+.role-badge.admin{background:rgba(245,158,11,.2);color:#f59e0b}
+.role-badge.representative{background:rgba(167,139,250,.2);color:#a78bfa}
+.role-badge.creator{background:rgba(250,204,21,.2);color:#facc15}
+.info-box{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);border-radius:12px;padding:15px;margin-bottom:20px;color:#c4b5fd;font-size:13px;display:flex;align-items:center;gap:10px}
+.plan-info{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:12px;padding:15px;margin-bottom:20px;color:#6ee7b7;font-size:13px}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="logo"><span class="vega">VEGA</span><span class="d">D</span></div>
+<div>
+<a href="/feed">Fil d'actualité</a>
+<a href="/messages">Messages</a>
+<a href="/alerts">Alertes</a>
+<a href="/authorities">📞 Autorités</a>
+<a href="/fund">Caisse</a>
+<a href="/rating">⭐ Évaluation</a>
+<a href="/profile">👤 Profil</a>
+{% if session.role in ['admin', 'representative', 'creator'] %}
+<a href="/admin">Admin</a>
+{% endif %}
+<a href="/logout">Déconnexion</a>
+</div>
+</nav>
+<div class="container">
+<h1 class="{% if user.role == 'creator' %}creator{% elif user.role == 'representative' %}rep{% else %}admin{% endif %}">
+{% if user.role == 'creator' %}👑 Tableau de bord Créateur
+{% elif user.role == 'representative' %}👑 Tableau de bord Représentant
+{% else %}⚙️ Tableau de bord Administrateur{% endif %}
+<span class="role-badge-header {% if user.role == 'creator' %}creator{% elif user.role == 'representative' %}rep{% else %}admin{% endif %}">{{ user.role|upper }}</span>
+</h1>
+<p class="subtitle">Bienvenue {{ user.username }} — {{ user.email }}</p>
+
+{% if user.role == 'creator' %}
+<div class="subscribed-banner" style="background:rgba(250,204,21,.15);border-color:rgba(250,204,21,.3);">
+<i class="fas fa-crown" style="color:#facc15;"></i>
+<span style="color:#fde047;">👑 <strong>Compte Créateur</strong> — Forfait illimité à vie</span>
+</div>
+{% elif trial_info and trial_info.is_trial and not trial_info.is_expired %}
+<div class="trial-banner">
+<div class="trial-info">
+<div class="trial-icon"><i class="fas fa-gift"></i></div>
+<div class="trial-text">
+<h3>🎁 Essai gratuit en cours</h3>
+<p>Il vous reste <span class="highlight">{{ trial_info.days_left }} jours</span> pour tester VEGAD.</p>
+</div>
+</div>
+<a href="/pricing" class="btn-subscribe"><i class="fas fa-crown"></i> Choisir un forfait</a>
+</div>
+{% elif trial_info and trial_info.is_subscribed %}
+<div class="subscribed-banner">
+<i class="fas fa-check-circle"></i>
+<span>✅ Forfait actif : <strong>{{ trial_info.plan_name }}</strong> — {{ trial_info.plan_price }} FCFA/mois</span>
+</div>
+{% endif %}
+
+{% if user.role == 'representative' %}
+<div class="info-box">
+<i class="fas fa-crown" style="font-size:20px;"></i>
+<div><strong>Vous êtes le Représentant de "{{ community.name if community else 'aucune communauté' }}".</strong><br>Vous pouvez promouvoir des membres en administrateurs ou les rétrograder.</div>
+</div>
+{% endif %}
+
+{% if community %}
+<div class="plan-info">
+<i class="fas fa-info-circle"></i>
+Forfait actuel : <strong>{{ community.plan_name() }}</strong> — {{ community.max_members() }} membres max — {{ community.members|length }} membres actuels
+</div>
+{% endif %}
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-value">{{ community_members|length }}</div><div class="stat-label">Membres</div></div>
+<div class="stat-card"><div class="stat-value" style="color:#f59e0b;">{{ pending_alerts|length }}</div><div class="stat-label">Alertes en attente</div></div>
+<div class="stat-card"><div class="stat-value" style="color:#ef4444;">{{ urgent_alerts|length }}</div><div class="stat-label">Alertes urgentes</div></div>
+</div>
+
+<div class="quick-actions">
+{% if user.role in ['representative', 'creator'] %}
+<a href="/communities/create" class="action-btn">➕ Créer communauté</a>
+{% endif %}
+<a href="/alerts" class="action-btn">🚨 Voir alertes</a>
+<a href="/communities" class="action-btn">🏘️ Communautés</a>
+<a href="/pricing" class="action-btn">👑 Forfaits</a>
+<a href="/admin/partners" class="action-btn">🔑 Partenaires</a>
+</div>
+
+{% if pending_alerts %}
+<div class="section-title"><i class="fas fa-clock" style="color:#f59e0b;"></i> Alertes mineures en attente <span class="badge-count">{{ pending_alerts|length }}</span></div>
+{% for alert in pending_alerts %}
+<div class="alert-card pending">
+<div class="alert-icon minor"><i class="fas fa-user-secret"></i></div>
+<div class="alert-body">
+<h3>{{ alert.title }}</h3>
+<p>{{ alert.description[:100] }}{% if alert.description|length > 100 %}...{% endif %}</p>
+<div class="alert-meta">
+<span><i class="fas fa-user"></i>{{ alert.author.username }}</span>
+<span><i class="fas fa-clock"></i>{{ alert.created_at.strftime('%d/%m %H:%M') }}</span>
+</div>
+<div class="alert-actions">
+<a href="/alerts/view/{{ alert.id }}" class="btn-small btn-view"><i class="fas fa-eye"></i> Voir</a>
+<form method="POST" action="/alerts/verify/{{ alert.id }}" style="display:inline;">
+<button type="submit" name="action" value="approve" class="btn-small btn-approve"><i class="fas fa-check"></i> Valider</button>
+<button type="submit" name="action" value="reject" class="btn-small btn-reject" onclick="return confirm('Rejeter ?')"><i class="fas fa-times"></i> Rejeter</button>
+</form>
+</div>
+</div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if urgent_alerts %}
+<div class="section-title"><i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> Alertes urgentes actives <span class="badge-count">{{ urgent_alerts|length }}</span></div>
+{% for alert in urgent_alerts %}
+<div class="alert-card urgent">
+<div class="alert-icon urgent"><i class="fas fa-exclamation-triangle"></i></div>
+<div class="alert-body">
+<h3>{{ alert.title }}</h3>
+<p>{{ alert.description[:100] }}{% if alert.description|length > 100 %}...{% endif %}</p>
+<div class="alert-meta">
+<span><i class="fas fa-user"></i>{{ alert.author.username }}</span>
+<span><i class="fas fa-clock"></i>{{ alert.created_at.strftime('%d/%m %H:%M') }}</span>
+</div>
+<div class="alert-actions">
+<a href="/alerts/view/{{ alert.id }}" class="btn-small btn-view"><i class="fas fa-eye"></i> Voir</a>
+<a href="/alerts/resolve/{{ alert.id }}" class="btn-small btn-approve" onclick="return confirm('Marquer résolue ?')"><i class="fas fa-check"></i> Résoudre</a>
+</div>
+</div>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="section-title"><i class="fas fa-users" style="color:#60a5fa;"></i> Membres de ma communauté <span class="badge-count">{{ community_members|length }}</span></div>
+<div class="members-list">
+{% for m in community_members %}
+<div class="member">
+<div class="avatar">{{ m.username[0]|upper }}</div>
+<div class="member-info">
+<div class="name">{{ m.username }}</div>
+<div class="email">{{ m.email }}</div>
+</div>
+<span class="role-badge {{ m.role }}">{{ m.role }}</span>
+{% if user.role in ['representative', 'creator'] and m.id != user.id %}
+{% if m.role == 'member' %}
+<form method="POST" action="/admin/promote/{{ m.id }}" style="display:inline;">
+<button type="submit" class="btn-small btn-approve" onclick="return confirm('Promouvoir {{ m.username }} en admin ?')"><i class="fas fa-arrow-up"></i> Promouvoir</button>
+</form>
+{% elif m.role == 'admin' %}
+<form method="POST" action="/admin/demote/{{ m.id }}" style="display:inline;">
+<button type="submit" class="btn-small btn-reject" onclick="return confirm('Rétrograder {{ m.username }} en membre ?')"><i class="fas fa-arrow-down"></i> Rétrograder</button>
+</form>
+{% endif %}
+{% endif %}
+</div>
+{% endfor %}
+</div>
+</div>
+</body>
+</html>

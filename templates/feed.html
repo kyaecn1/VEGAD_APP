@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Fil d'actualité</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.navbar{background:rgba(15,23,42,.9);backdrop-filter:blur(15px);padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05)}
+.logo{font-size:22px;font-weight:700}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+.navbar a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:14px}
+.navbar a:hover{color:#fff}
+.container{max-width:800px;margin:30px auto;padding:0 20px}
+h1{color:#fff;font-size:28px;margin-bottom:5px}
+.subtitle{color:#94a3b8;font-size:14px;margin-bottom:25px}
+.section-title{color:#fff;font-size:18px;font-weight:600;margin:25px 0 15px;display:flex;align-items:center;gap:10px}
+.badge-count{background:rgba(255,255,255,.1);color:#94a3b8;padding:3px 10px;border-radius:20px;font-size:12px}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;margin-bottom:12px;display:flex;gap:15px;align-items:start;text-decoration:none;color:inherit;transition:.3s}
+.card:hover{border-color:#60a5fa;transform:translateX(5px)}
+.card.urgent{border-left:4px solid #ef4444;background:rgba(239,68,68,.05)}
+.card.approved{border-left:4px solid #34d399}
+.card.message{border-left:4px solid #a78bfa}
+.card-icon{width:45px;height:45px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.card-icon.urgent{background:rgba(239,68,68,.15);color:#ef4444}
+.card-icon.minor{background:rgba(52,211,153,.15);color:#34d399}
+.card-icon.message{background:rgba(167,139,250,.15);color:#a78bfa}
+.card-icon.notif{background:rgba(245,158,11,.15);color:#f59e0b}
+.card-body{flex:1;min-width:0}
+.card-body h3{color:#fff;font-size:15px;margin-bottom:5px}
+.card-body p{color:#94a3b8;font-size:13px;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-meta{display:flex;gap:15px;font-size:12px;color:#64748b;flex-wrap:wrap}
+.card-meta span{display:flex;align-items:center;gap:5px}
+.fund-card{background:linear-gradient(135deg,rgba(52,211,153,.1),rgba(96,165,250,.1));border:1px solid rgba(52,211,153,.3);border-radius:16px;padding:25px;margin-bottom:20px}
+.fund-card h3{color:#fff;font-size:16px;margin-bottom:10px}
+.fund-amount{font-size:36px;font-weight:800;color:#34d399;margin-bottom:5px}
+.fund-objective{color:#94a3b8;font-size:13px;margin-bottom:15px}
+.progress-bar{background:rgba(255,255,255,.1);height:10px;border-radius:10px;overflow:hidden;margin-bottom:8px}
+.progress-fill{background:linear-gradient(90deg,#34d399,#10b981);height:100%;border-radius:10px;transition:width 1s}
+.progress-text{display:flex;justify-content:space-between;color:#94a3b8;font-size:12px}
+.empty{text-align:center;padding:30px;color:#64748b;background:rgba(255,255,255,.02);border-radius:16px;border:1px dashed rgba(255,255,255,.1);font-size:14px}
+.empty i{font-size:30px;color:#334155;display:block;margin-bottom:10px}
+.quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:30px}
+.action-btn{padding:15px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:#fff;text-decoration:none;font-size:13px;font-weight:500;text-align:center;transition:.3s}
+.action-btn:hover{border-color:#60a5fa;background:rgba(96,165,250,.1)}
+.action-btn i{display:block;font-size:20px;margin-bottom:8px;color:#60a5fa}
+.alert{padding:12px 20px;border-radius:10px;margin-bottom:20px}
+.alert-danger{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
+.alert-success{background:rgba(52,211,153,.15);color:#6ee7b7;border:1px solid rgba(52,211,153,.2)}
+.alert-info{background:rgba(96,165,250,.15);color:#93c5fd;border:1px solid rgba(96,165,250,.2)}
+.alert-warning{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.2)}
+.trial-banner{background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(96,165,250,.15));border:1px solid rgba(52,211,153,.3);border-radius:16px;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.trial-banner p{color:#94a3b8;font-size:13px}
+.trial-banner .highlight{color:#34d399;font-weight:700}
+.btn-subscribe{padding:10px 20px;background:linear-gradient(135deg,#34d399,#10b981);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:600;text-decoration:none;transition:.3s}
+.btn-subscribe:hover{transform:translateY(-2px);box-shadow:0 8px 20px -5px rgba(16,185,129,.5)}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="logo"><span class="vega">VEGA</span><span class="d">D</span></div>
+<div>
+<a href="/feed">Fil d'actualité</a>
+<a href="/messages">Messages</a>
+<a href="/alerts">Alertes</a>
+<a href="/authorities">📞 Autorités</a>
+<a href="/fund">Caisse</a>
+<a href="/rating">⭐ Évaluation</a>
+<a href="/profile">👤 Profil</a>
+{% if session.role in ['admin', 'representative', 'creator'] %}
+<a href="/admin">Admin</a>
+{% endif %}
+<a href="/logout">Déconnexion</a>
+</div>
+</nav>
+<div class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<h1>👋 Bienvenue {{ user.username }} !</h1>
+<p class="subtitle">Voici ce qui se passe dans votre communauté</p>
+
+{% if trial_info and trial_info.is_trial and not trial_info.is_expired %}
+<div class="trial-banner">
+<p>🎁 Essai gratuit — Il vous reste <span class="highlight">{{ trial_info.days_left }} jours</span></p>
+<a href="/pricing" class="btn-subscribe"><i class="fas fa-crown"></i> Choisir un forfait</a>
+</div>
+{% endif %}
+
+<div class="quick-actions">
+<a href="/alerts/create" class="action-btn"><i class="fas fa-exclamation-triangle"></i> Créer une alerte</a>
+<a href="/messages" class="action-btn"><i class="fas fa-comments"></i> Messages</a>
+<a href="/fund" class="action-btn"><i class="fas fa-hand-holding-usd"></i> Caisse</a>
+<a href="/rating" class="action-btn"><i class="fas fa-star"></i> Voir les notes</a>
+</div>
+
+<div class="fund-card">
+<h3>💰 Caisse communautaire</h3>
+<div class="fund-amount">{{ fund.total }} FCFA</div>
+<div class="fund-objective">Objectif : {{ fund.objective }} FCFA</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width:  fundpercentage /div
+div
+div class=progress-text">
+<span>{{ fund.percentage }}% atteint</span>
+<span>{{ fund.objective - fund.total }} FCFA restants</span>
+</div>
+</div>
+
+<div class="section-title">
+<i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i>
+Alertes récentes
+<span class="badge-count">{{ urgent_alerts|length + verified_alerts|length }}</span>
+</div>
+{% if urgent_alerts or verified_alerts %}
+{% for alert in urgent_alerts %}
+<a href="/alerts/view/{{ alert.id }}" class="card urgent">
+<div class="card-icon urgent"><i class="fas fa-exclamation-triangle"></i></div>
+<div class="card-body">
+<h3>🚨 {{ alert.title }}</h3>
+<p>{{ alert.description[:100] }}{% if alert.description|length > 100 %}...{% endif %}</p>
+<div class="card-meta">
+<span><i class="fas fa-user"></i>{{ alert.author.username }}</span>
+<span><i class="fas fa-clock"></i>{{ alert.created_at.strftime('%d/%m %H:%M') }}</span>
+</div>
+</div>
+</a>
+{% endfor %}
+{% for alert in verified_alerts %}
+<a href="/alerts/view/{{ alert.id }}" class="card approved">
+<div class="card-icon minor"><i class="fas fa-check-circle"></i></div>
+<div class="card-body">
+<h3>{{ alert.title }}</h3>
+<p>{{ alert.description[:100] }}{% if alert.description|length > 100 %}...{% endif %}</p>
+<div class="card-meta">
+<span><i class="fas fa-user"></i>{{ alert.author.username }}</span>
+<span><i class="fas fa-clock"></i>{{ alert.created_at.strftime('%d/%m %H:%M') }}</span>
+</div>
+</div>
+</a>
+{% endfor %}
+{% else %}
+<div class="empty">
+<i class="fas fa-shield-alt"></i>
+Aucune alerte pour le moment
+</div>
+{% endif %}
+
+<div class="section-title">
+<i class="fas fa-comments" style="color:#a78bfa;"></i>
+Derniers messages
+<span class="badge-count">{{ recent_messages|length }}</span>
+</div>
+{% if recent_messages %}
+{% for msg in recent_messages %}
+<a href="/messages" class="card message">
+<div class="card-icon message"><i class="fas fa-comment"></i></div>
+<div class="card-body">
+<h3>{{ msg.sender.username if msg.sender else 'Anonyme' }}</h3>
+<p>{{ msg.content[:100] }}{% if msg.content|length > 100 %}...{% endif %}</p>
+<div class="card-meta">
+<span><i class="fas fa-clock"></i>{{ msg.created_at.strftime('%d/%m %H:%M') }}</span>
+</div>
+</div>
+</a>
+{% endfor %}
+{% else %}
+<div class="empty">
+<i class="fas fa-comment-slash"></i>
+Aucun message récent
+</div>
+{% endif %}
+
+<div class="section-title">
+<i class="fas fa-bell" style="color:#f59e0b;"></i>
+Notifications
+<span class="badge-count">{{ notifications|length }}</span>
+</div>
+{% if notifications %}
+{% for notif in notifications %}
+<a href="/notifications" class="card">
+<div class="card-icon notif"><i class="fas fa-bell"></i></div>
+<div class="card-body">
+<h3>{{ notif.title }}</h3>
+<p>{{ notif.content[:100] }}{% if notif.content|length > 100 %}...{% endif %}</p>
+<div class="card-meta">
+<span><i class="fas fa-clock"></i>{{ notif.created_at.strftime('%d/%m %H:%M') }}</span>
+</div>
+</div>
+</a>
+{% endfor %}
+{% else %}
+<div class="empty">
+<i class="fas fa-bell-slash"></i>
+Aucune notification
+</div>
+{% endif %}
+</div>
+</body>
+</html>

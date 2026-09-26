@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Choisir ma communauté</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:30px 20px}
+.container{max-width:1000px;margin:0 auto}
+.header{text-align:center;margin-bottom:30px}
+.logo{font-size:32px;font-weight:700;margin-bottom:10px}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+h1{color:#fff;font-size:28px;margin-bottom:10px}
+.subtitle{color:#94a3b8;font-size:15px}
+.welcome-msg{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:15px 20px;color:#93c5fd;font-size:14px;margin-bottom:30px;text-align:center}
+.search-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;margin-bottom:25px}
+.search-box h3{color:#fff;font-size:16px;margin-bottom:15px;display:flex;align-items:center;gap:10px}
+.search-box h3 i{color:#60a5fa}
+.search-form{display:flex;gap:10px;flex-wrap:wrap}
+.search-form input{flex:1;min-width:200px;padding:14px 18px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-size:15px;outline:none;font-family:inherit;transition:.3s}
+.search-form input::placeholder{color:#64748b}
+.search-form input:focus{border-color:#60a5fa;box-shadow:0 0 0 4px rgba(96,165,250,.15)}
+.search-form button{padding:14px 28px;background:linear-gradient(135deg,#60a5fa,#3b82f6);border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:8px}
+.search-form button:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(59,130,246,.5)}
+.communities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px;margin-bottom:25px}
+.community-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;transition:.3s;display:flex;flex-direction:column}
+.community-card:hover{transform:translateY(-3px);border-color:#60a5fa;box-shadow:0 15px 30px -10px rgba(0,0,0,.4)}
+.community-card h4{color:#fff;font-size:16px;margin-bottom:8px}
+.community-card p{color:#94a3b8;font-size:13px;margin-bottom:12px;flex:1}
+.community-card .meta{display:flex;gap:12px;color:#64748b;font-size:12px;margin-bottom:15px;flex-wrap:wrap}
+.community-card .meta i{color:#60a5fa;margin-right:4px}
+.btn-join{display:block;padding:10px;background:linear-gradient(135deg,#34d399,#10b981);color:#fff;text-decoration:none;border-radius:10px;font-size:14px;font-weight:600;text-align:center;transition:.3s}
+.btn-join:hover{transform:translateY(-2px);box-shadow:0 8px 20px -5px rgba(16,185,129,.5)}
+.empty{text-align:center;padding:40px 20px;color:#64748b;background:rgba(255,255,255,.02);border-radius:16px;border:1px dashed rgba(255,255,255,.1)}
+.empty i{font-size:40px;color:#334155;display:block;margin-bottom:15px}
+.empty h3{color:#fff;margin-bottom:8px}
+.create-section{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:16px;padding:25px;text-align:center;margin-top:20px}
+.create-section h3{color:#fff;margin-bottom:8px;font-size:18px}
+.create-section p{color:#94a3b8;font-size:14px;margin-bottom:18px}
+.btn-create{padding:14px 32px;background:linear-gradient(135deg,#34d399,#10b981);color:#fff;text-decoration:none;border-radius:12px;font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:.3s}
+.btn-create:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(16,185,129,.5)}
+.footer-info{text-align:center;margin-top:30px}
+.footer-info a{color:#60a5fa;text-decoration:none;font-size:14px}
+@media(max-width:600px){.search-form button{width:100%}.communities-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="logo"><span class="vega">VEGA</span><span class="d">D</span></div>
+<h1>Bienvenue {{ user.username }} !</h1>
+<p class="subtitle">Choisissez votre communauté pour continuer</p>
+</div>
+<div class="welcome-msg">
+<i class="fas fa-info-circle"></i>
+Vous n'avez pas encore rejoint de communauté. Recherchez la vôtre ci-dessous.
+</div>
+<div class="search-box">
+<h3><i class="fas fa-search"></i> Rechercher une communauté</h3>
+<form class="search-form" method="GET" action="/choose-community">
+<input type="text" name="search" placeholder="Tapez le nom de votre quartier..." value="{{ search or '' }}">
+<button type="submit"><i class="fas fa-search"></i> Rechercher</button>
+</form>
+</div>
+{% if communities %}
+<div class="communities-grid">
+{% for community in communities %}
+<div class="community-card">
+<h4>🏘️ {{ community.name }}</h4>
+<p>{{ community.description or 'Pas de description' }}</p>
+<div class="meta">
+<span><i class="fas fa-map-marker-alt"></i>{{ community.city or 'Ville inconnue' }}</span>
+<span><i class="fas fa-users"></i>{{ community.members|length }} membres</span>
+<span><i class="fas fa-star"></i>{{ community.safety_score }}/10</span>
+</div>
+<a href="/communities/join/{{ community.id }}" class="btn-join">
+<i class="fas fa-user-plus"></i> Rejoindre
+</a>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<div class="empty">
+<i class="fas fa-city"></i>
+<h3>Aucune communauté trouvée</h3>
+<p>{% if search %}Essayez une autre recherche.{% else %}Soyez le premier à créer votre communauté !{% endif %}</p>
+</div>
+{% endif %}
+<div class="create-section">
+<h3>🏘️ Votre communauté n'existe pas encore ?</h3>
+<p>Créez-la et devenez Représentant. <strong style="color:#34d399;">17 jours d'essai gratuit</strong>.</p>
+<a href="/communities/create" class="btn-create">
+<i class="fas fa-plus-circle"></i> Créer ma communauté
+</a>
+</div>
+<div class="footer-info">
+<a href="/logout"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
+</div>
+</div>
+</body>
+</html>

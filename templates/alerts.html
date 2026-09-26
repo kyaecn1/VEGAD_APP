@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Alertes</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.navbar{background:rgba(15,23,42,.9);backdrop-filter:blur(15px);padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05)}
+.logo{font-size:22px;font-weight:700}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+.navbar a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:14px}
+.navbar a:hover{color:#fff}
+.container{max-width:1200px;margin:30px auto;padding:0 20px}
+h1{color:#fff;margin-bottom:10px;font-size:32px}
+.subtitle{color:#94a3b8;margin-bottom:30px}
+.top-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.btn-create{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;text-decoration:none;border-radius:12px;font-size:14px;font-weight:600;transition:.3s}
+.btn-create:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(239,68,68,.5)}
+.section-title{color:#fff;font-size:18px;font-weight:600;margin:30px 0 15px;display:flex;align-items:center;gap:10px}
+.badge-count{background:rgba(255,255,255,.1);color:#94a3b8;padding:3px 10px;border-radius:20px;font-size:12px}
+.alert-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;margin-bottom:12px;transition:.3s;display:flex;gap:15px;align-items:start}
+.alert-card:hover{border-color:rgba(96,165,250,.3);transform:translateX(5px)}
+.alert-card.urgent{border-left:4px solid #ef4444;background:rgba(239,68,68,.05)}
+.alert-card.pending{border-left:4px solid #f59e0b}
+.alert-card.approved{border-left:4px solid #34d399}
+.alert-icon{width:45px;height:45px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.alert-icon.urgent{background:rgba(239,68,68,.15);color:#ef4444}
+.alert-icon.minor{background:rgba(245,158,11,.15);color:#f59e0b}
+.alert-body{flex:1}
+.alert-body h3{color:#fff;font-size:16px;margin-bottom:5px}
+.alert-body p{color:#94a3b8;font-size:14px;margin-bottom:8px}
+.alert-meta{display:flex;gap:15px;font-size:12px;color:#64748b;flex-wrap:wrap}
+.alert-meta span{display:flex;align-items:center;gap:5px}
+.alert-actions{display:flex;gap:8px;margin-top:10px}
+.btn-small{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;cursor:pointer;border:none;transition:.3s;display:inline-flex;align-items:center;gap:5px}
+.btn-approve{background:rgba(52,211,153,.2);color:#34d399}
+.btn-approve:hover{background:rgba(52,211,153,.3)}
+.btn-reject{background:rgba(239,68,68,.2);color:#fca5a5}
+.btn-reject:hover{background:rgba(239,68,68,.3)}
+.btn-view{background:rgba(96,165,250,.2);color:#60a5fa}
+.btn-view:hover{background:rgba(96,165,250,.3)}
+.empty{text-align:center;padding:40px 20px;color:#64748b;background:rgba(255,255,255,.02);border-radius:16px;border:1px dashed rgba(255,255,255,.1)}
+.empty i{font-size:40px;margin-bottom:15px;color:#334155;display:block}
+.alert{padding:12px 20px;border-radius:10px;margin-bottom:20px}
+.alert-danger{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
+.alert-success{background:rgba(52,211,153,.15);color:#6ee7b7;border:1px solid rgba(52,211,153,.2)}
+.alert-info{background:rgba(96,165,250,.15);color:#93c5fd;border:1px solid rgba(96,165,250,.2)}
+.alert-warning{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.2)}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="logo"><span class="vega">VEGA</span><span class="d">D</span></div>
+<div>
+{% if user.role in ['admin', 'representative'] %}
+<a href="/admin">Admin</a>
+{% else %}
+<a href="/feed">Tableau de bord</a>
+{% endif %}
+<a href="/communities">Communautés</a>
+<a href="/logout">Déconnexion</a>
+</div>
+</nav>
+<div class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="top-actions">
+<div>
+<h1>🚨 Alertes</h1>
+<p class="subtitle">Toutes les alertes de votre communauté</p>
+</div>
+<a href="/alerts/create" class="btn-create"><i class="fas fa-plus-circle"></i> Nouvelle alerte</a>
+</div>
+{% if urgent_alerts %}
+<div class="section-title"><i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> Alertes urgentes actives <span class="badge-count">{{ urgent_alerts|length }}</span></div>
+{% for alert in urgent_alerts %}
+<div class="alert-card urgent">
+<div class="alert-icon urgent"><i class="fas fa-exclamation-triangle"></i></div>
+<div class="alert-body">
+<h3>{{ alert.title }}</h3>
+<p>{{ alert.description[:150] }}{% if alert.description|length > 150 %}...{% endif %}</p>
+<div class="alert-meta">
+<span><i class="fas fa-user"></i>{{ alert.author.username }}</span>
+<span><i class="fas fa-clock"></i>{{ alert.created_at.strftime('%d/%m %H:%M') }}</span>
+{% if alert.address %}<span><i class="fas fa-map-marker-alt"></i>{{ alert.address }}</span>{% endif %}
+</div>
+<div class="alert-actions">
+<a href="/alerts/view/{{ alert.id }}" class="btn-small btn-view"><i class="fas fa-eye"></i> Voir</a>
+{% if user.role in ['admin', 'representative'] %}
+<a href="/alerts/resolve/{{ alert.id }}" class="btn-small btn-approve" onclick="return confirm('Marquer comme résolue ?')"><i class="fas fa-check"></i> Résoudre</a>
+{% endif %}
+</div>
+</div>
+</div>
+{% endfor %}
+{% endif %}
+{% if user.role in ['admin', 'representative'] and pending_alerts %}
+<div class="section-title"><i class="fas fa-clock" style="color:#f59e0b;"></i> Alertes mineures en attente <span class="badge-count">{{ pending_alerts|length }}</span></div>
+{% for alert in pending_alerts %}
+<div class="alert-card pending">
+<div class="alert-icon minor"><i class="fas fa-user-secret"></i></div>
+<div class="alert-body">
+<h3>{{ alert.title }} <span style="font-size:12px;color:#f59e0b;">(En attente)</span></h3>
+<p>{{ alert.description[:150] }}{% if alert.description|length > 150 %}...{% endif %}</p>
+<div class="alert-meta">
+<span><i class="fas fa-user"></i>{{ alert.author.username }}</span>
+<span><i class="fas fa-clock"></i>{{ alert.created_at.strftime('%d/%m %H:%M') }}</span>
+</div>
+<div class="alert-actions">
+<a href="/alerts/view/{{ alert.id }}" class="btn-small btn-view"><i class="fas fa-eye"></i> Voir</a>
+<form method="POST" action="/alerts/verify/{{ alert.id }}" style="display:inline;">
+<button type="submit" name="action" value="approve" class="btn-small btn-approve"><i class="fas fa-check"></i> Valider</button>
+<button type="submit" name="action" value="reject" class="btn-small btn-reject" onclick="return confirm('Rejeter cette alerte ?')"><i class="fas fa-times"></i> Rejeter</button>
+</form>
+</div>
+</div>
+</div>
+{% endfor %}
+{% endif %}
+{% if verified_alerts %}
+<div class="section-title"><i class="fas fa-check-circle" style="color:#34d399;"></i> Alertes validées <span class="badge-count">{{ verified_alerts|length }}</span></div>
+{% for alert in verified_alerts %}
+<div class="alert-card approved">
+<div class="alert-icon minor"><i class="fas fa-check-circle"></i></div>
+<div class="alert-body">
+<h3>{{ alert.title }}</h3>
+<p>{{ alert.description[:150] }}{% if alert.description|length > 150 %}...{% endif %}</p>
+<div class="alert-meta">
+<span><i class="fas fa-user"></i>{{ alert.author.username }}</span>
+<span><i class="fas fa-clock"></i>{{ alert.created_at.strftime('%d/%m %H:%M') }}</span>
+{% if alert.address %}<span><i class="fas fa-map-marker-alt"></i>{{ alert.address }}</span>{% endif %}
+</div>
+<div class="alert-actions">
+<a href="/alerts/view/{{ alert.id }}" class="btn-small btn-view"><i class="fas fa-eye"></i> Voir</a>
+</div>
+</div>
+</div>
+{% endfor %}
+{% endif %}
+{% if not urgent_alerts and not verified_alerts and not pending_alerts %}
+<div class="empty">
+<i class="fas fa-shield-alt"></i>
+<h3>Aucune alerte pour le moment</h3>
+<p>Tout est calme dans votre quartier 🌿</p>
+</div>
+{% endif %}
+</div>
+</body>
+</html>

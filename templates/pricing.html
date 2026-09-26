@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Forfaits</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.navbar{background:rgba(15,23,42,.9);backdrop-filter:blur(15px);padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05)}
+.logo{font-size:22px;font-weight:700}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+.navbar a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:14px}
+.navbar a:hover{color:#fff}
+.container{max-width:1200px;margin:40px auto;padding:0 20px}
+.header{text-align:center;margin-bottom:50px}
+.header h1{color:#fff;font-size:38px;margin-bottom:15px;letter-spacing:-1px}
+.header p{color:#94a3b8;font-size:16px;max-width:600px;margin:0 auto}
+.badge-trial{display:inline-block;background:rgba(52,211,153,.15);color:#6ee7b7;padding:8px 20px;border-radius:50px;font-size:14px;font-weight:600;margin-bottom:20px;border:1px solid rgba(52,211,153,.3)}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px;margin-bottom:50px}
+.plan{background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);border-radius:24px;padding:35px 30px;transition:.3s;position:relative;display:flex;flex-direction:column}
+.plan:hover{transform:translateY(-8px);box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}
+.plan.popular{border-color:#60a5fa;background:rgba(96,165,250,.05)}
+.plan.popular::before{content:'⭐ POPULAIRE';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#60a5fa,#3b82f6);color:#fff;padding:5px 20px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:1px}
+.plan-icon{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px}
+.plan.small .plan-icon{background:rgba(96,165,250,.15);color:#60a5fa}
+.plan.medium .plan-icon{background:rgba(52,211,153,.15);color:#34d399}
+.plan.large .plan-icon{background:rgba(167,139,250,.15);color:#a78bfa}
+.plan h3{color:#fff;font-size:22px;margin-bottom:8px}
+.plan .target{color:#94a3b8;font-size:13px;margin-bottom:20px}
+.price{margin-bottom:25px}
+.price .amount{font-size:38px;font-weight:800;color:#fff}
+.price .currency{font-size:18px;color:#94a3b8}
+.price .period{color:#94a3b8;font-size:14px}
+.price .annual{color:#34d399;font-size:13px;margin-top:5px}
+.features{list-style:none;margin-bottom:25px;flex:1}
+.features li{padding:10px 0;color:#cbd5e1;font-size:14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.features li:last-child{border:none}
+.features li i{color:#34d399;font-size:14px}
+.features li.disabled{color:#64748b}
+.features li.disabled i{color:#ef4444}
+.btn-plan{display:block;width:100%;padding:15px;border-radius:12px;text-align:center;text-decoration:none;font-weight:600;font-size:15px;transition:.3s;border:none;cursor:pointer}
+.btn-plan.small{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)}
+.btn-plan.small:hover{background:rgba(96,165,250,.25)}
+.btn-plan.medium{background:linear-gradient(135deg,#60a5fa,#3b82f6);color:#fff}
+.btn-plan.medium:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(59,130,246,.5)}
+.btn-plan.large{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff}
+.btn-plan.large:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(139,92,246,.5)}
+.info-box{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);border-radius:16px;padding:25px;text-align:center;margin-top:30px}
+.info-box h3{color:#fff;margin-bottom:10px}
+.info-box p{color:#94a3b8;font-size:14px}
+.info-box .highlight{color:#60a5fa;font-weight:600}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="logo"><span class="vega">VEGA</span><span class="d">D</span></div>
+<div>
+{% if session.user_id %}
+{% if session.role in ['admin', 'representative'] %}
+<a href="/admin">Tableau de bord</a>
+{% else %}
+<a href="/feed">Tableau de bord</a>
+{% endif %}
+{% else %}
+<a href="/">Accueil</a>
+{% endif %}
+<a href="/logout">Déconnexion</a>
+</div>
+</nav>
+<div class="container">
+<div class="header">
+<div class="badge-trial">🎁 17 jours d'essai gratuit</div>
+<h1>Choisissez votre forfait</h1>
+<p>Des tarifs adaptés à la taille de votre communauté. Sans engagement, annulable à tout moment.</p>
+</div>
+<div class="plans">
+<div class="plan small">
+<div class="plan-icon"><i class="fas fa-home"></i></div>
+<h3>🏘️ Petit Quartier</h3>
+<p class="target">Pour les petites cités</p>
+<div class="price">
+<span class="amount">3 500</span>
+<span class="currency">FCFA</span>
+<span class="period">/mois</span>
+<div class="annual">ou 35 000 FCFA/an (2 mois offerts)</div>
+</div>
+<ul class="features">
+<li><i class="fas fa-check"></i> Jusqu'à <strong>50 membres</strong></li>
+<li><i class="fas fa-check"></i> Alertes illimitées</li>
+<li><i class="fas fa-check"></i> Caisse communautaire</li>
+<li><i class="fas fa-check"></i> Messagerie</li>
+<li><i class="fas fa-check"></i> Carte GPS (OpenStreetMap)</li>
+<li><i class="fas fa-check"></i> VEGABOT (guide)</li>
+<li class="disabled"><i class="fas fa-times"></i> Statistiques avancées</li>
+<li class="disabled"><i class="fas fa-times"></i> Multi-quartiers</li>
+</ul>
+<a href="/subscribe/small" class="btn-plan small">Choisir ce forfait</a>
+</div>
+<div class="plan medium popular">
+<div class="plan-icon"><i class="fas fa-city"></i></div>
+<h3>🏙️ Quartier / Cité</h3>
+<p class="target">Pour les quartiers standards</p>
+<div class="price">
+<span class="amount">8 000</span>
+<span class="currency">FCFA</span>
+<span class="period">/mois</span>
+<div class="annual">ou 80 000 FCFA/an (2 mois offerts)</div>
+</div>
+<ul class="features">
+<li><i class="fas fa-check"></i> Jusqu'à <strong>200 membres</strong></li>
+<li><i class="fas fa-check"></i> Alertes illimitées</li>
+<li><i class="fas fa-check"></i> Caisse communautaire</li>
+<li><i class="fas fa-check"></i> Messagerie</li>
+<li><i class="fas fa-check"></i> Carte GPS (OpenStreetMap)</li>
+<li><i class="fas fa-check"></i> VEGABOT (assistant)</li>
+<li><i class="fas fa-check"></i> Statistiques</li>
+<li><i class="fas fa-check"></i> Plus d'admins</li>
+</ul>
+<a href="/subscribe/medium" class="btn-plan medium">Choisir ce forfait</a>
+</div>
+<div class="plan large">
+<div class="plan-icon"><i class="fas fa-building"></i></div>
+<h3>🌆 Grand Quartier</h3>
+<p class="target">Pour les zones / 1/2 ville</p>
+<div class="price">
+<span class="amount">18 000</span>
+<span class="currency">FCFA</span>
+<span class="period">/mois</span>
+<div class="annual">ou 180 000 FCFA/an (2 mois offerts)</div>
+</div>
+<ul class="features">
+<li><i class="fas fa-check"></i> <strong>Membres illimités</strong></li>
+<li><i class="fas fa-check"></i> Alertes illimitées</li>
+<li><i class="fas fa-check"></i> Caisse communautaire</li>
+<li><i class="fas fa-check"></i> Messagerie</li>
+<li><i class="fas fa-check"></i> Carte GPS (OpenStreetMap)</li>
+<li><i class="fas fa-check"></i> VEGABOT (super-admin)</li>
+<li><i class="fas fa-check"></i> Statistiques avancées</li>
+<li><i class="fas fa-check"></i> Multi-quartiers (2-4 cités)</li>
+<li><i class="fas fa-check"></i> Support prioritaire</li>
+</ul>
+<a href="/subscribe/large" class="btn-plan large">Choisir ce forfait</a>
+</div>
+</div>
+<div class="info-box">
+<h3>💳 Paiement sécurisé</h3>
+<p>Mobile Money (Orange, MTN, Moov) • Carte bancaire (Visa, Mastercard)<br><span class="highlight">Annulable à tout moment. Sans engagement.</span></p>
+</div>
+</div>
+</body>
+</html>

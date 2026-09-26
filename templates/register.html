@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Inscription</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.box{background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border-radius:24px;padding:40px 35px;width:100%;max-width:440px;border:1px solid rgba(255,255,255,.1);box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}
+.logo{text-align:center;margin-bottom:10px}
+.logo h1{font-size:32px;font-weight:700;color:#fff;letter-spacing:-1px}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+.logo p{color:#94a3b8;font-size:14px;margin-top:4px;letter-spacing:2px;text-transform:uppercase}
+.welcome{color:#fff;font-size:20px;font-weight:600;margin:25px 0 6px 0;text-align:center}
+.welcome-sub{color:#94a3b8;font-size:14px;text-align:center;margin-bottom:25px}
+.alert{padding:12px;border-radius:10px;font-size:13px;margin-bottom:16px}
+.alert-danger{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+.alert-success{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.2);color:#6ee7b7}
+.input-group{margin-bottom:16px}
+.input-group label{display:block;color:#cbd5e1;font-size:13px;font-weight:500;margin-bottom:6px}
+.input-wrapper{position:relative}
+.input-wrapper i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#64748b;font-size:16px}
+.input-wrapper input{width:100%;padding:14px 14px 14px 46px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-size:15px;transition:.3s;outline:none}
+.input-wrapper input::placeholder{color:#64748b}
+.input-wrapper input:focus{border-color:#60a5fa;background:rgba(255,255,255,.12);box-shadow:0 0 0 4px rgba(96,165,250,.15)}
+.terms{display:flex;align-items:flex-start;gap:8px;color:#94a3b8;font-size:13px;margin:12px 0}
+.terms input[type="checkbox"]{margin-top:4px;accent-color:#34d399}
+.terms a{color:#60a5fa;text-decoration:none}
+.btn-register{width:100%;padding:15px;background:linear-gradient(135deg,#34d399,#10b981);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:600;cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px}
+.btn-register:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(16,185,129,.4)}
+.login-link{text-align:center;margin-top:20px;color:#94a3b8;font-size:14px}
+.login-link a{color:#60a5fa;text-decoration:none;font-weight:500}
+.login-link a:hover{text-decoration:underline}
+.divider{display:flex;align-items:center;gap:15px;margin:20px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
+.divider span{color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="box">
+<div class="logo" onclick="document.getElementById('partnerBox').style.display='block'" style="cursor:pointer;">
+<h1><span class="vega">VEGA</span><span class="d">D</span></h1>
+<p>Votre quartier sécurisé</p>
+</div>
+
+<!-- BOX CODE PARTENAIRE (caché) -->
+<div id="partnerBox" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1e293b;border-top:2px solid #60a5fa;padding:20px;z-index:9999;box-shadow:0 -10px 30px rgba(0,0,0,.5);">
+<div style="max-width:500px;margin:0 auto;text-align:center;">
+<h3 style="color:#fff;margin-bottom:10px;">🔑 Code Partenaire</h3>
+<p style="color:#94a3b8;font-size:13px;margin-bottom:15px;">Entrez votre code pour activer un compte partenaire</p>
+<form method="POST" action="/partner-code" style="display:flex;gap:10px;">
+<input type="text" name="code" placeholder="VEGAD-XXXXXXXX" required maxlength="20" style="flex:1;padding:12px 16px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-size:14px;text-transform:uppercase;text-align:center;letter-spacing:2px;outline:none;">
+<button type="submit" style="padding:12px 24px;background:linear-gradient(135deg,#34d399,#10b981);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Valider</button>
+<button type="button" onclick="document.getElementById('partnerBox').style.display='none'" style="padding:12px 16px;background:rgba(255,255,255,.1);border:none;border-radius:10px;color:#94a3b8;cursor:pointer;">✕</button>
+</form>
+</div>
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="welcome">Créer un compte</div>
+<div class="welcome-sub">Rejoignez votre communauté en quelques secondes</div>
+<form action="/register" method="POST">
+<div class="input-group">
+<label for="username">Nom d'utilisateur</label>
+<div class="input-wrapper">
+<i class="fas fa-user"></i>
+<input type="text" id="username" name="username" placeholder="Votre nom ou pseudo" required>
+</div>
+</div>
+<div class="input-group">
+<label for="email">Adresse email</label>
+<div class="input-wrapper">
+<i class="fas fa-envelope"></i>
+<input type="email" id="email" name="email" placeholder="exemple@email.com" required>
+</div>
+</div>
+<div class="input-group">
+<label for="password">Mot de passe</label>
+<div class="input-wrapper">
+<i class="fas fa-lock"></i>
+<input type="password" id="password" name="password" placeholder="••••••••" required minlength="6">
+</div>
+</div>
+<div class="input-group">
+<label for="confirm_password">Confirmer le mot de passe</label>
+<div class="input-wrapper">
+<i class="fas fa-lock"></i>
+<input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required minlength="6">
+</div>
+</div>
+<div class="terms">
+<input type="checkbox" id="terms" required>
+<label for="terms">J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de confidentialité</a>.</label>
+</div>
+<button type="submit" class="btn-register">
+<i class="fas fa-user-plus"></i> S'inscrire
+</button>
+</form>
+<div class="divider"><span>ou</span></div>
+<div class="login-link">
+Vous avez déjà un compte ? <a href="/login">Se connecter</a>
+</div>
+</div>
+</body>
+
+
+<!-- BOX CODE PARTENAIRE (caché) -->
+<div id="partnerBox" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1e293b;border-top:2px solid #60a5fa;padding:20px;z-index:9999;box-shadow:0 -10px 30px rgba(0,0,0,.5);">
+<div style="max-width:500px;margin:0 auto;text-align:center;">
+<h3 style="color:#fff;margin-bottom:10px;">🔑 Code Partenaire</h3>
+<p id="partnerMsg" style="color:#94a3b8;font-size:13px;margin-bottom:15px;">Remplissez d'abord tous vos champs d'inscription</p>
+<form method="POST" action="/register" id="partnerForm">
+<input type="hidden" name="partner_code" id="partnerCodeHidden">
+<input type="text" id="partnerCodeInput" placeholder="VEGAD-XXXXXXXX" maxlength="30" style="width:100%;padding:14px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-size:14px;text-transform:uppercase;text-align:center;letter-spacing:2px;outline:none;margin-bottom:10px;" disabled>
+<div style="display:flex;gap:10px;justify-content:center;">
+<button type="button" id="partnerValidate" style="padding:12px 24px;background:linear-gradient(135deg,#34d399,#10b981);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;opacity:0.5;" disabled>Valider</button>
+<button type="button" onclick="document.getElementById('partnerBox').style.display='none'" style="padding:12px 16px;background:rgba(255,255,255,.1);border:none;border-radius:10px;color:#94a3b8;cursor:pointer;">✕</button>
+</div>
+</form>
+</div>
+</div>
+
+<script>
+// ===== LOGO CLICK =====
+const logo = document.querySelector('.logo');
+if (logo) {
+    logo.style.cursor = 'pointer';
+    logo.addEventListener('click', function() {
+        document.getElementById('partnerBox').style.display = 'block';
+        checkFormCompletion();
+    });
+}
+
+// ===== VÉRIFIER SI TOUS LES CHAMPS SONT REMPLIS =====
+function checkFormCompletion() {
+    const username = document.getElementById('username') ? document.getElementById('username').value.trim() : '';
+    const email = document.getElementById('email') ? document.getElementById('email').value.trim() : '';
+    const password = document.getElementById('password') ? document.getElementById('password').value.trim() : '';
+    const confirm = document.getElementById('confirm_password') ? document.getElementById('confirm_password').value.trim() : '';
+    
+    const allFilled = username && email && password && confirm;
+    
+    const input = document.getElementById('partnerCodeInput');
+    const btn = document.getElementById('partnerValidate');
+    const msg = document.getElementById('partnerMsg');
+    
+    if (allFilled) {
+        input.disabled = false;
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        msg.textContent = '✅ Vous pouvez entrer votre code partenaire';
+        msg.style.color = '#34d399';
+    } else {
+        input.disabled = true;
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        msg.textContent = '⚠️ Remplissez d\'abord tous vos champs d\'inscription';
+        msg.style.color = '#f59e0b';
+    }
+}
+
+// ===== ÉCOUTER LES CHAMPS =====
+['username', 'email', 'password', 'confirm_password'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+        el.addEventListener('input', checkFormCompletion);
+    }
+});
+
+// ===== BOUTON VALIDER =====
+document.getElementById('partnerValidate').addEventListener('click', function() {
+    const code = document.getElementById('partnerCodeInput').value.trim().toUpperCase();
+    if (code) {
+        document.getElementById('partnerCodeHidden').value = code;
+        document.getElementById('partnerForm').submit();
+    }
+});
+</script>
+
+
+</html>

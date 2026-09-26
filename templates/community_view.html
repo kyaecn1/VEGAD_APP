@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>VEGAD - {{ community.name }}</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:40px 20px}
+.container{max-width:900px;margin:0 auto}
+.header{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:30px;margin-bottom:20px}
+h1{color:#fff;margin-bottom:10px}
+.meta{display:flex;gap:20px;color:#94a3b8;font-size:14px;margin-top:15px;flex-wrap:wrap}
+.meta i{color:#60a5fa;margin-right:6px}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:30px}
+.card h2{color:#fff;margin-bottom:20px;font-size:20px}
+.member{display:flex;align-items:center;gap:15px;padding:12px;border-bottom:1px solid rgba(255,255,255,.05)}
+.member:last-child{border:none}
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#34d399);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.role-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(96,165,250,.2);color:#60a5fa;margin-left:auto}
+.role-badge.admin{background:rgba(245,158,11,.2);color:#f59e0b}
+.role-badge.representative{background:rgba(167,139,250,.2);color:#a78bfa}
+a{color:#60a5fa;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🏘️ {{ community.name }}</h1>
+<p style="color:#94a3b8;">{{ community.description or 'Pas de description' }}</p>
+<div class="meta">
+<span><i class="fas fa-map-marker-alt"></i>{{ community.city or 'Ville inconnue' }}</span>
+<span><i class="fas fa-star"></i>{{ community.safety_score }}/10</span>
+<span><i class="fas fa-users"></i>{{ members|length }} membres</span>
+</div>
+</div>
+<div class="card">
+<h2>👥 Membres</h2>
+{% if members %}
+{% for member in members %}
+<div class="member">
+<div class="avatar">{{ member.username[0]|upper }}</div>
+<div>
+<div style="color:#fff;font-weight:600;">{{ member.username }}</div>
+<div style="color:#64748b;font-size:13px;">{{ member.email }}</div>
+</div>
+<span class="role-badge {% if member.role == 'admin' %}admin{% elif member.role == 'representative' %}representative{% endif %}">
+{{ member.role }}
+</span>
+</div>
+{% endfor %}
+{% else %}
+<p style="color:#64748b;">Aucun membre pour le moment.</p>
+{% endif %}
+</div>
+<p style="margin-top:20px;text-align:center;"><a href="/communities">← Retour aux communautés</a></p>
+</div>
+</body>
+</html>

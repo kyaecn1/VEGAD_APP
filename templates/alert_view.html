@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>VEGAD - {{ alert.title }}</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:40px 20px}
+.container{max-width:800px;margin:0 auto}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:35px}
+.card.urgent{border-left:6px solid #ef4444}
+.card.approved{border-left:6px solid #34d399}
+.card.pending{border-left:6px solid #f59e0b}
+.header{display:flex;align-items:center;gap:15px;margin-bottom:20px}
+.icon{width:60px;height:60px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.icon.urgent{background:rgba(239,68,68,.15);color:#ef4444}
+.icon.minor{background:rgba(245,158,11,.15);color:#f59e0b}
+h1{color:#fff;font-size:26px;margin-bottom:5px}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.status-urgent{background:rgba(239,68,68,.2);color:#fca5a5}
+.status-approved{background:rgba(52,211,153,.2);color:#6ee7b7}
+.status-pending{background:rgba(245,158,11,.2);color:#fcd34d}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:25px 0}
+.info-item{background:rgba(255,255,255,.03);padding:15px;border-radius:12px}
+.info-label{color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.info-value{color:#fff;font-size:15px}
+.description{background:rgba(255,255,255,.03);padding:20px;border-radius:12px;margin:20px 0;color:#cbd5e1;line-height:1.7}
+.back{color:#60a5fa;text-decoration:none;display:inline-block;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="card {{ alert.alert_type }} {{ alert.status if alert.alert_type == 'minor' else '' }}">
+<div class="header">
+<div class="icon {{ 'urgent' if alert.alert_type == 'urgent' else 'minor' }}">
+<i class="fas fa-{{ 'exclamation-triangle' if alert.alert_type == 'urgent' else 'user-secret' }}"></i>
+</div>
+<div>
+<h1>{{ alert.title }}</h1>
+{% if alert.alert_type == 'urgent' %}
+<span class="status-badge status-urgent">🚨 URGENT</span>
+{% elif alert.status == 'approved' %}
+<span class="status-badge status-approved">✅ Validée</span>
+{% elif alert.status == 'pending' %}
+<span class="status-badge status-pending">⏳ En attente</span>
+{% elif alert.status == 'rejected' %}
+<span class="status-badge" style="background:rgba(239,68,68,.2);color:#fca5a5;">❌ Rejetée</span>
+{% endif %}
+</div>
+</div>
+<div class="info-grid">
+<div class="info-item">
+<div class="info-label">Auteur</div>
+<div class="info-value">{{ alert.author.username }}</div>
+</div>
+<div class="info-item">
+<div class="info-label">Date</div>
+<div class="info-value">{{ alert.created_at.strftime('%d/%m/%Y à %H:%M') }}</div>
+</div>
+<div class="info-item">
+<div class="info-label">Catégorie</div>
+<div class="info-value">{{ alert.category }}</div>
+</div>
+{% if alert.address %}
+<div class="info-item">
+<div class="info-label">Lieu</div>
+<div class="info-value">{{ alert.address }}</div>
+</div>
+{% endif %}
+</div>
+<div class="info-label">Description</div>
+<div class="description">{{ alert.description }}</div>
+{% if alert.rejection_reason %}
+<div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);padding:15px;border-radius:12px;color:#fca5a5;font-size:14px;">
+<strong>❌ Raison du rejet :</strong> {{ alert.rejection_reason }}
+</div>
+{% endif %}
+<a href="/alerts" class="back">← Retour aux alertes</a>
+</div>
+</div>
+</body>
+</html>

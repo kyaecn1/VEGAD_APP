@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Évaluation des quartiers</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.navbar{background:rgba(15,23,42,.9);backdrop-filter:blur(15px);padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05)}
+.logo{font-size:22px;font-weight:700}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+.navbar a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:14px}
+.navbar a:hover{color:#fff}
+.container{max-width:1000px;margin:30px auto;padding:0 20px}
+h1{color:#fff;font-size:28px;margin-bottom:5px}
+.subtitle{color:#94a3b8;font-size:14px;margin-bottom:25px}
+.section-title{color:#fff;font-size:18px;font-weight:600;margin:25px 0 15px;display:flex;align-items:center;gap:10px}
+.ranking-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;margin-bottom:12px;display:flex;align-items:center;gap:15px;transition:.3s}
+.ranking-card:hover{border-color:#60a5fa;transform:translateX(5px)}
+.ranking-card.top1{border-left:4px solid #facc15;background:rgba(250,204,21,.05)}
+.ranking-card.top2{border-left:4px solid #94a3b8;background:rgba(148,163,184,.05)}
+.ranking-card.top3{border-left:4px solid #d97706;background:rgba(217,119,6,.05)}
+.rank-number{font-size:28px;font-weight:800;color:#64748b;min-width:40px;text-align:center}
+.rank-number.gold{color:#facc15}
+.rank-number.silver{color:#94a3b8}
+.rank-number.bronze{color:#d97706}
+.community-info{flex:1}
+.community-info h3{color:#fff;font-size:16px;margin-bottom:5px}
+.community-info p{color:#94a3b8;font-size:13px}
+.score-badge{padding:10px 18px;border-radius:50px;font-size:20px;font-weight:700}
+.score-badge.high{background:rgba(52,211,153,.2);color:#34d399}
+.score-badge.medium{background:rgba(245,158,11,.2);color:#f59e0b}
+.score-badge.low{background:rgba(239,68,68,.2);color:#ef4444}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:25px;margin-bottom:15px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;color:#cbd5e1;font-size:14px;margin-bottom:8px;font-weight:500}
+.form-group textarea{width:100%;padding:14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-size:15px;font-family:inherit;resize:vertical;min-height:100px;outline:none;transition:.3s}
+.form-group textarea:focus{border-color:#60a5fa;box-shadow:0 0 0 4px rgba(96,165,250,.15)}
+.stars{display:flex;gap:5px;margin:10px 0;justify-content:center}
+.star{font-size:32px;color:#334155;cursor:pointer;transition:.2s}
+.star.active{color:#facc15}
+.star:hover{transform:scale(1.2)}
+.btn-submit{padding:14px 28px;background:linear-gradient(135deg,#34d399,#10b981);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:.3s;display:inline-flex;align-items:center;gap:8px}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(16,185,129,.5)}
+.btn-rate{padding:12px 24px;background:linear-gradient(135deg,#60a5fa,#3b82f6);color:#fff;text-decoration:none;border-radius:10px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:.3s;border:none;cursor:pointer}
+.btn-rate:hover{transform:translateY(-2px);box-shadow:0 8px 20px -5px rgba(59,130,246,.5)}
+.btn-rate.disabled{background:rgba(255,255,255,.1);color:#64748b;cursor:not-allowed}
+.empty{text-align:center;padding:40px;color:#64748b;background:rgba(255,255,255,.02);border-radius:16px;border:1px dashed rgba(255,255,255,.1)}
+.empty i{font-size:40px;color:#334155;display:block;margin-bottom:15px}
+.alert{padding:12px 20px;border-radius:10px;margin-bottom:20px}
+.alert-success{background:rgba(52,211,153,.15);color:#6ee7b7;border:1px solid rgba(52,211,153,.2)}
+.alert-info{background:rgba(96,165,250,.15);color:#93c5fd;border:1px solid rgba(96,165,250,.2)}
+.alert-warning{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.2)}
+.month-badge{background:rgba(96,165,250,.15);color:#60a5fa;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.rating-summary{background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(52,211,153,.1));border:1px solid rgba(96,165,250,.3);border-radius:16px;padding:25px;text-align:center;margin-bottom:25px}
+.rating-summary h3{color:#fff;margin-bottom:10px;font-size:16px}
+.rating-summary .big-score{font-size:48px;font-weight:800;color:#60a5fa}
+.rating-summary .small-text{color:#94a3b8;font-size:13px}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="logo"><span class="vega">VEGA</span><span class="d">D</span></div>
+<div>
+<a href="/feed">Fil d'actualité</a>
+<a href="/messages">Messages</a>
+<a href="/alerts">Alertes</a>
+<a href="/fund">Caisse</a>
+<a href="/authorities">Autorités</a>
+{% if session.role in ['admin', 'representative', 'creator'] %}
+<a href="/admin">Admin</a>
+{% endif %}
+<a href="/logout">Déconnexion</a>
+</div>
+</nav>
+<div class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<h1>⭐ Évaluation des quartiers</h1>
+<p class="subtitle">Notes et classement des quartiers de {{ community.city if community else 'votre ville' }}</p>
+
+<!-- MA COMMUNAUTÉ -->
+{% if community %}
+<div class="rating-summary">
+<h3>🏘️ {{ community.name }} — Ma communauté</h3>
+<div class="big-score">{{ community.safety_score }}/10</div>
+<div class="small-text">Note actuelle</div>
+</div>
+{% endif %}
+
+<!-- CLASSEMENT -->
+<div class="section-title">
+<i class="fas fa-trophy" style="color:#facc15;"></i>
+Classement des quartiers
+</div>
+
+{% if ranked_communities %}
+{% for item in ranked_communities %}
+<div class="ranking-card {% if loop.index == 1 %}top1{% elif loop.index == 2 %}top2{% elif loop.index == 3 %}top3{% endif %}">
+<div class="rank-number {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}">
+{% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
+</div>
+<div class="community-info">
+<h3>{{ item.community.name }}</h3>
+<p>{{ item.community.description or 'Pas de description' }} — {{ item.community.members|length }} membres</p>
+</div>
+<span class="score-badge {% if item.score >= 8 %}high{% elif item.score >= 6 %}medium{% else %}low{% endif %}">
+{{ item.score }}/10
+</span>
+</div>
+{% endfor %}
+{% else %}
+<div class="empty">
+<i class="fas fa-trophy"></i>
+<h3 style="color:#fff;margin:15px 0 8px;">Aucun classement</h3>
+<p>Les notes apparaîtront après le premier vote mensuel.</p>
+</div>
+{% endif %}
+
+<!-- NOTER LES AUTRES QUARTIERS -->
+{% if can_vote %}
+<div class="section-title">
+<i class="fas fa-star" style="color:#60a5fa;"></i>
+Noter les autres quartiers ce mois-ci
+</div>
+
+{% if has_voted_this_month %}
+<div class="alert alert-info">
+<i class="fas fa-check-circle"></i> Vous avez déjà noté ce mois-ci. Revenez le mois prochain !
+</div>
+{% endif %}
+
+{% if other_communities %}
+{% for c in other_communities %}
+<div class="ranking-card">
+<div class="rank-number">🏘️</div>
+<div class="community-info">
+<h3>{{ c.name }}</h3>
+<p>{{ c.description or 'Pas de description' }} — {{ c.members|length }} membres</p>
+</div>
+{% if not already_rated %}
+<button class="btn-rate" onclick="openRatingModal( '{{ c.name }}')">
+<i class="fas fa-star"></i> Noter
+</button>
+{% else %}
+<span class="btn-rate disabled"><i class="fas fa-check"></i> Déjà noté</span>
+{% endif %}
+</div>
+{% endfor %}
+{% else %}
+<div class="empty">
+<i class="fas fa-city"></i>
+<h3 style="color:#fff;margin:15px 0 8px;">Aucun autre quartier</h3>
+<p>Il n'y a pas d'autres quartiers dans votre ville pour le moment.</p>
+</div>
+{% endif %}
+{% endif %}
+
+</div>
+
+<!-- MODAL DE NOTATION -->
+<div id="ratingModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+<div style="background:#1e293b;border-radius:20px;padding:30px;max-width:500px;width:100%;border:1px solid rgba(255,255,255,.1);">
+<h3 id="modalTitle" style="color:#fff;margin-bottom:20px;font-size:20px;text-align:center;">Noter le quartier</h3>
+<form method="POST" action="/rating/submit">
+<input type="hidden" name="rated_community_id" id="ratedCommunityId">
+<div class="form-group">
+<label style="text-align:center;display:block;">Votre note (sur 10)</label>
+<div class="stars" id="starsContainer">
+<span class="star" data-value="1">★</span>
+<span class="star" data-value="2">★</span>
+<span class="star" data-value="3">★</span>
+<span class="star" data-value="4">★</span>
+<span class="star" data-value="5">★</span>
+<span class="star" data-value="6">★</span>
+<span class="star" data-value="7">★</span>
+<span class="star" data-value="8">★</span>
+<span class="star" data-value="9">★</span>
+<span class="star" data-value="10">★</span>
+</div>
+<input type="hidden" name="score" id="scoreInput" required>
+<p id="scoreDisplay" style="color:#facc15;font-weight:600;text-align:center;font-size:20px;">0/10</p>
+</div>
+<div class="form-group">
+<label>Explication (optionnel)</label>
+<textarea name="comment" placeholder="Pourquoi cette note ? (ex: bon voisinage, sécurité, propreté...)"></textarea>
+</div>
+<div style="display:flex;gap:10px;justify-content:center;">
+<button type="submit" class="btn-submit"><i class="fas fa-check"></i> Envoyer</button>
+<button type="button" onclick="closeRatingModal()" style="padding:14px 28px;background:rgba(255,255,255,.1);color:#94a3b8;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;">Annuler</button>
+</div>
+</form>
+</div>
+</div>
+
+<script>
+let selectedScore = 0;
+
+document.querySelectorAll('.star').forEach(star => {
+    star.addEventListener('click', function() {
+        selectedScore = parseInt(this.dataset.value);
+        document.getElementById('scoreInput').value = selectedScore;
+        document.getElementById('scoreDisplay').textContent = selectedScore + '/10';
+        document.querySelectorAll('.star').forEach(s => {
+            if (parseInt(s.dataset.value) <= selectedScore) {
+                s.classList.add('active');
+            } else {
+                s.classList.remove('active');
+            }
+        });
+    });
+});
+
+function openRatingModal(communityId, communityName) {
+    document.getElementById('ratedCommunityId').value = communityId;
+    document.getElementById('modalTitle').textContent = 'Noter ' + communityName;
+    document.getElementById('ratingModal').style.display = 'flex';
+    selectedScore = 0;
+    document.getElementById('scoreInput').value = '';
+    document.getElementById('scoreDisplay').textContent = '0/10';
+    document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+}
+
+function closeRatingModal() {
+    document.getElementById('ratingModal').style.display = 'none';
+}
+</script>
+</body>
+</html>

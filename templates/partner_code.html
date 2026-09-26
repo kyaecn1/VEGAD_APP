@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Code Partenaire</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.box{background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border-radius:24px;padding:40px 35px;width:100%;max-width:450px;border:1px solid rgba(255,255,255,.1);box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}
+.logo{text-align:center;margin-bottom:20px}
+.logo h1{font-size:32px;font-weight:700;color:#fff;letter-spacing:-1px}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+h2{color:#fff;text-align:center;margin-bottom:10px;font-size:22px}
+.subtitle{color:#94a3b8;text-align:center;font-size:14px;margin-bottom:25px}
+.alert{padding:12px;border-radius:10px;font-size:13px;margin-bottom:16px}
+.alert-danger{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+.alert-success{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.2);color:#6ee7b7}
+.input-group{margin-bottom:20px}
+.input-group label{display:block;color:#cbd5e1;font-size:13px;font-weight:500;margin-bottom:8px}
+.input-wrapper{position:relative}
+.input-wrapper i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#64748b;font-size:16px}
+.input-wrapper input{width:100%;padding:14px 14px 14px 46px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-size:15px;transition:.3s;outline:none;letter-spacing:2px;text-align:center;font-weight:700;text-transform:uppercase}
+.input-wrapper input::placeholder{color:#64748b;letter-spacing:normal;font-weight:normal;text-transform:none}
+.input-wrapper input:focus{border-color:#60a5fa;background:rgba(255,255,255,.12);box-shadow:0 0 0 4px rgba(96,165,250,.15)}
+.btn-submit{width:100%;padding:15px;background:linear-gradient(135deg,#34d399,#10b981);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:600;cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(16,185,129,.4)}
+.back{text-align:center;margin-top:20px}
+.back a{color:#60a5fa;text-decoration:none;font-size:14px}
+.info-box{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.3);border-radius:12px;padding:15px;margin-bottom:20px;color:#93c5fd;font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+<div class="box">
+<div class="logo"><h1><span class="vega">VEGA</span><span class="d">D</span></h1></div>
+<h2>🔑 Code Partenaire</h2>
+<p class="subtitle">Entrez votre code pour activer un compte sans frais</p>
+<div class="info-box">
+<i class="fas fa-info-circle"></i> Réservé aux partenaires VEGAD
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<form method="POST">
+<div class="input-group">
+<label>Code d'activation</label>
+<div class="input-wrapper">
+<i class="fas fa-key"></i>
+<input type="text" name="code" placeholder="VEGAD-XXXXXXXX" required maxlength="20">
+</div>
+</div>
+<button type="submit" class="btn-submit">
+<i class="fas fa-unlock"></i> Activer mon compte
+</button>
+</form>
+<div class="back"><a href="/choose-community">← Retour</a></div>
+</div>
+</body>
+</html>

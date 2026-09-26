@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEGAD - Notifications</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.navbar{background:rgba(15,23,42,.9);backdrop-filter:blur(15px);padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.05)}
+.logo{font-size:22px;font-weight:700}
+.vega{color:#60a5fa}
+.d{color:#34d399}
+.navbar a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:14px}
+.navbar a:hover{color:#fff}
+.container{max-width:800px;margin:30px auto;padding:0 20px}
+h1{color:#fff;font-size:28px;margin-bottom:5px}
+.subtitle{color:#94a3b8;font-size:14px;margin-bottom:25px}
+.notif{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;margin-bottom:12px;display:flex;gap:15px;align-items:start;transition:.3s}
+.notif:hover{border-color:#60a5fa}
+.notif.unread{background:rgba(96,165,250,.05);border-left:4px solid #60a5fa}
+.notif-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:rgba(96,165,250,.15);color:#60a5fa}
+.notif-icon.urgent{background:rgba(239,68,68,.15);color:#ef4444}
+.notif-icon.minor{background:rgba(245,158,11,.15);color:#f59e0b}
+.notif-icon.success{background:rgba(52,211,153,.15);color:#34d399}
+.notif-body{flex:1}
+.notif-body h3{color:#fff;font-size:15px;margin-bottom:5px}
+.notif-body p{color:#94a3b8;font-size:13px;margin-bottom:8px}
+.notif-body .date{color:#64748b;font-size:12px}
+.empty{text-align:center;padding:40px;color:#64748b;background:rgba(255,255,255,.02);border-radius:16px;border:1px dashed rgba(255,255,255,.1)}
+.empty i{font-size:40px;color:#334155;display:block;margin-bottom:15px}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="logo"><span class="vega">VEGA</span><span class="d">D</span></div>
+<div>
+<a href="/feed">Fil d'actualité</a>
+<a href="/messages">Messages</a>
+<a href="/alerts">Alertes</a>
+<a href="/logout">Déconnexion</a>
+</div>
+</nav>
+<div class="container">
+<h1>🔔 Notifications</h1>
+<p class="subtitle">Vos dernières alertes et informations</p>
+{% if notifications %}
+{% for notif in notifications %}
+<a href="/notifications/read/{{ notif.id }}" style="text-decoration:none;color:inherit;">
+<div class="notif {% if not notif.is_read %}unread{% endif %}">
+<div class="notif-icon {% if notif.type == 'alert_urgent' %}urgent{% elif notif.type == 'alert_minor' %}minor{% elif notif.type in ['alert_approved', 'alert_rejected'] %}success{% endif %}">
+<i class="fas fa-{% if notif.type == 'alert_urgent' %}exclamation-triangle{% elif notif.type == 'alert_minor' %}user-secret{% elif notif.type == 'alert_approved' %}check-circle{% elif notif.type == 'alert_rejected' %}times-circle{% else %}bell{% endif %}"></i>
+</div>
+<div class="notif-body">
+<h3>{{ notif.title }}</h3>
+<p>{{ notif.content }}</p>
+<div class="date">{{ notif.created_at.strftime('%d/%m/%Y à %H:%M') }}</div>
+</div>
+</div>
+</a>
+{% endfor %}
+{% else %}
+<div class="empty">
+<i class="fas fa-bell-slash"></i>
+<h3 style="color:#fff;margin:15px 0 8px;">Aucune notification</h3>
+<p>Vous êtes à jour !</p>
+</div>
+{% endif %}
+</div>
+</body>
+</html>
